@@ -2,16 +2,40 @@ import xmltodict
 from pprint import pprint
 import json
 import requests
+import dateutil.parser
 
-my_xml = requests.get("https://www.ikea.com/gb/en/iows/catalog/availability/30373588/").content # IKEA Shark
+storeNum = ["186", "150"]
+# IKEA Leeds, IKEA Cardiff
+items = ["30373588", "50455234"]
+# BLÅHAJ Large, BLÅHAJ Small
 
-my_dict = xmltodict.parse(my_xml)['ir:ikea-rest']["availability"]["localStore"]
+store_id = "186"  # IKEA Leeds
 
+for item in items:
 
-store_id = "186" # IKEA Leeds
+    itemAPIEndpoint = requests.get(
+        "https://www.ikea.com/gb/en/iows/catalog/availability/" + item + "/"
+    ).content
 
-for store in my_dict:
-	if store['@buCode'] == store_id:
-		pprint(store)
-	else:
-		pass
+    itemDict = xmltodict.parse(itemAPIEndpoint)["ir:ikea-rest"]["availability"][
+        "localStore"
+    ]
+
+    for ikeaStore in storeNum:
+        for stores in itemDict:
+            if stores["@buCode"] == ikeaStore:
+                pprint(stores)
+                print(
+                    "Avalable "
+                    + item
+                    + " at "
+                    + ikeaStore
+                    + " as of "
+                    + dateutil.parser.parse(stores["stock"]["validDate"]).strftime(
+                        "%d/%m/%Y"
+                    )
+                    + " : "
+                    + str(stores["stock"]["availableStock"])
+                )
+            else:
+                pass
