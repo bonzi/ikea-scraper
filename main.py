@@ -19,9 +19,11 @@ for item in items:
         "localStore"
     ]
 
-    for ikeaStore in storeNum:
-        for stores in itemDict:
-            if stores["@buCode"] == ikeaStore:
+    for ikeaStore in storeNum:  # Loop through store ID's in the store arrays
+        for stores in itemDict:  # Loop through all stores in the item's dict
+            if (
+                stores["@buCode"] == ikeaStore
+            ):  # Check if selected store is one selected by end user
                 pprint(stores)
                 print(
                     "Avalable "
@@ -34,6 +36,6 @@ for item in items:
                     )
                     + " : "
                     + str(stores["stock"]["availableStock"])
-                )
+                )  # Example output, will be removed/turned in to a function at a later date
             else:
-                pass
+                pass  # Skip to next dict as it is not what user requires
