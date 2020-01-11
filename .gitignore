@@ -11,3 +11,4 @@
 [Pp]yvenv.cfg
 .[Vv]env
 [Pp]ip-selfcheck.json
+__pycache__
