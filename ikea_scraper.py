@@ -5,10 +5,23 @@ import requests
 import dateutil.parser
 
 
-def itemInfo(countryCode, languageCode, storeCode, itemCode):
+def itemInfo(countryCode: str, languageCode: str, storeCode: str, itemCode: str):
     d = dict()
     """
+    itemInfo
+    --------
     Example Output, used for testing inputted config variables, e.g. storeCode, item, etc
+    
+    Parameters
+    ----------
+    countryCode: str
+        User's country code - e.g. gb, us, de, fr, etc
+    languageCode: str
+        User's language code, e.g. en, de, fr, etc
+    storeCode: str
+        User's store code, Some UK ones can be found here: http://curlybrackets.co/blog/2016/04/05/scraping-ikea-api-php/
+    itemCode: str
+        User's item code, usually denoted xxx.xxx.xx - Provide to library without the full stop/period's
     """
     itemAPIEndpoint = requests.get(
         "https://www.ikea.com/"
@@ -24,7 +37,8 @@ def itemInfo(countryCode, languageCode, storeCode, itemCode):
         print(
             "Error: Status " + str(itemAPIEndpoint.status_code) + ", Invalid Item Code"
         )
-        d["status"] = "404"
+        d["status"] = "failure"
+        d["code"] = "404"
         d["message"] = "Invalid Item Code"
         return d
 
@@ -57,17 +71,39 @@ def itemInfo(countryCode, languageCode, storeCode, itemCode):
                 pass  # Skip to next dict as it is not what user requires
 
 
-def itemLocation(countryCode, languageCode, storeCode, itemCode):
+def itemLocation(countryCode: str, languageCode: str, storeCode: str, itemCode: str):
     """
+    itemLocation
+    ------------
     Output Item Location
     
-    Prints per item and per store, will return in the future
+    Prints per item and per store.
+    Returns JSON Dictionary for use
     
-    Item Types:
+    Parameters
+    ----------
+    countryCode: str
+        User's country code - e.g. gb, us, de, fr, etc
+    languageCode: str
+        User's language code, e.g. en, de, fr, etc
+    storeCode: str
+        User's store code, Some UK ones can be found here: http://curlybrackets.co/blog/2016/04/05/scraping-ikea-api-php/
+    itemCode: str
+        User's item code, usually denoted xxx.xxx.xx - Provide to library without the full stop/period's
     
-    CONTACT_STAFF
-    BOX_SHELF - box, shelf
-    SPECIALITY_SHOP - specialityShop
+    Returns
+    -------
+    d : dict of str
+        JSON Array/Dictionary of formatted API Data
+        
+    Item Types
+    ----------
+    CONTACT_STAFF: str
+        No Child Data
+    BOX_SHELF: str
+        box: str, shelf: str
+    SPECIALITY_SHOP
+        specialityShop: str
     
     """
 
@@ -86,7 +122,8 @@ def itemLocation(countryCode, languageCode, storeCode, itemCode):
         print(
             "Error: Status " + str(itemAPIEndpoint.status_code) + ", Invalid Item Code"
         )
-        d["status"] = "404"
+        d["status"] = "failure"
+        d["code"] = "404"
         d["message"] = "Invalid Item Code"
         return d
 
@@ -150,11 +187,5 @@ def itemLocation(countryCode, languageCode, storeCode, itemCode):
                     d["shelf"] = stores["stock"]["findItList"]["findIt"]["shelf"]
 
                     return d
-
-                else:
-
-                    d["status"] = "failure"
-                    return d
-
             else:
                 pass  # Skip to next dict as it is not what user requires
