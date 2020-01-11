@@ -9,8 +9,6 @@ storeNum = ["186", "150"]
 items = ["30373588", "50455234"]
 # BLÅHAJ Large, BLÅHAJ Small
 
-store_id = "186"  # IKEA Leeds
-
 for item in items:
 
     itemAPIEndpoint = requests.get(
