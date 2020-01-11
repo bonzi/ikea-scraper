@@ -42,10 +42,18 @@ def itemInfo(storeNum, items):
 
 
 def itemLocation(storeNum, items):
+    returnable = []
     """
     Output Item Location
     
     Prints per item and per store, will return in the future
+    
+    Item Types:
+    
+    CONTACT_STAFF
+    BOX_SHELF - box, shelf
+    SPECIALITY_SHOP - specialityShop
+    
     """
     for item in items:
 
@@ -62,15 +70,6 @@ def itemLocation(storeNum, items):
                 if (
                     stores["@buCode"] == ikeaStore
                 ):  # Check if selected store is one selected by end user
-
-                    """
-                    Item Types:
-                    
-                    CONTACT_STAFF
-                    BOX_SHELF - box, shelf
-                    SPECIALITY_SHOP - specialityShop
-                    
-                    """
                     # print(
                     #    str(stores["stock"]["findItList"]["findIt"])
                     # )  # Example output
@@ -79,7 +78,14 @@ def itemLocation(storeNum, items):
                         == "CONTACT_STAFF"
                     ):
                         print(stores["stock"]["findItList"]["findIt"]["type"])
-                        return stores["stock"]["findItList"]["findIt"]["type"]
+                        returnable.append(
+                            (
+                                ["store", ikeaStore],
+                                ["item", item],
+                                stores["stock"]["findItList"]["findIt"]["type"],
+                            )
+                        )
+
                     elif (
                         stores["stock"]["findItList"]["findIt"]["type"]
                         == "SPECIALITY_SHOP"
@@ -89,9 +95,15 @@ def itemLocation(storeNum, items):
                             + " "
                             + stores["stock"]["findItList"]["findIt"]["specialityShop"],
                         )
-                        return (
-                            stores["stock"]["findItList"]["findIt"]["type"],
-                            stores["stock"]["findItList"]["findIt"]["specialityShop"],
+                        returnable.append(
+                            (
+                                ["store", ikeaStore],
+                                ["item", item],
+                                stores["stock"]["findItList"]["findIt"]["type"],
+                                stores["stock"]["findItList"]["findIt"][
+                                    "specialityShop"
+                                ],
+                            )
                         )
                     elif stores["stock"]["findItList"]["findIt"]["type"] == "BOX_SHELF":
                         print(
@@ -101,13 +113,18 @@ def itemLocation(storeNum, items):
                             + " "
                             + stores["stock"]["findItList"]["findIt"]["shelf"]
                         )
-                        return (
-                            stores["stock"]["findItList"]["findIt"]["type"],
-                            stores["stock"]["findItList"]["findIt"]["box"],
-                            stores["stock"]["findItList"]["findIt"]["shelf"],
+                        returnable.append(
+                            (
+                                ["store", ikeaStore],
+                                ["item", item],
+                                stores["stock"]["findItList"]["findIt"]["type"],
+                                stores["stock"]["findItList"]["findIt"]["box"],
+                                stores["stock"]["findItList"]["findIt"]["shelf"],
+                            )
                         )
                     else:
                         return TypeError
 
                 else:
                     pass  # Skip to next dict as it is not what user requires
+    return returnable

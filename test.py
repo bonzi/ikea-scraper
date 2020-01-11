@@ -1,4 +1,5 @@
 from ikea_scraper import itemLocation, itemInfo
+from pprint import pprint
 
 testStores = [
     "186"
@@ -28,4 +29,4 @@ testItems = [
 # itemInfo(testStores, testItems)
 h = itemLocation(testStores, testItems)
 
-print(h)
+pprint(h)
