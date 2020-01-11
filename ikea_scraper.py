@@ -58,6 +58,8 @@ def itemLocation(countryCode, languageCode, storeCode, itemCode):
     
     """
 
+    d = dict()
+
     itemAPIEndpoint = requests.get(
         "https://www.ikea.com/"
         + countryCode
@@ -82,7 +84,7 @@ def itemLocation(countryCode, languageCode, storeCode, itemCode):
             if stores["stock"]["findItList"]["findIt"]["type"] == "CONTACT_STAFF":
                 print(stores["stock"]["findItList"]["findIt"]["type"])
 
-                d = dict()
+                d["status"] = "success"
                 d["store"] = storeCode
                 d["item"] = itemCode
                 d["type"] = stores["stock"]["findItList"]["findIt"]["type"]
@@ -96,7 +98,7 @@ def itemLocation(countryCode, languageCode, storeCode, itemCode):
                     + stores["stock"]["findItList"]["findIt"]["specialityShop"],
                 )
 
-                d = dict()
+                d["status"] = "success"
                 d["store"] = storeCode
                 d["item"] = itemCode
                 d["type"] = stores["stock"]["findItList"]["findIt"]["type"]
@@ -115,7 +117,7 @@ def itemLocation(countryCode, languageCode, storeCode, itemCode):
                     + stores["stock"]["findItList"]["findIt"]["shelf"]
                 )
 
-                d = dict()
+                d["status"] = "success"
                 d["store"] = storeCode
                 d["item"] = itemCode
                 d["type"] = stores["stock"]["findItList"]["findIt"]["type"]
@@ -125,7 +127,9 @@ def itemLocation(countryCode, languageCode, storeCode, itemCode):
                 return d
 
             else:
-                return TypeError
+
+                d["status"] = "failure"
+                return d
 
         else:
             pass  # Skip to next dict as it is not what user requires
