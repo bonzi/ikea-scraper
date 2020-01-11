@@ -5,12 +5,18 @@ import requests
 import dateutil.parser
 
 
-def itemInfo(storeCode, itemCode):
+def itemInfo(countryCode, languageCode, storeCode, itemCode):
     """
     Example Output, used for testing inputted config variables, e.g. storeCode, item, etc
     """
     itemAPIEndpoint = requests.get(
-        "https://www.ikea.com/gb/en/iows/catalog/availability/" + itemCode + "/"
+        "https://www.ikea.com/"
+        + countryCode
+        + "/"
+        + languageCode
+        + "/iows/catalog/availability/"
+        + itemCode
+        + "/"
     ).content
 
     itemDict = xmltodict.parse(itemAPIEndpoint)["ir:ikea-rest"]["availability"][
@@ -38,7 +44,7 @@ def itemInfo(storeCode, itemCode):
             pass  # Skip to next dict as it is not what user requires
 
 
-def itemLocation(storeCode, itemCode):
+def itemLocation(countryCode, languageCode, storeCode, itemCode):
     """
     Output Item Location
     
@@ -53,7 +59,13 @@ def itemLocation(storeCode, itemCode):
     """
 
     itemAPIEndpoint = requests.get(
-        "https://www.ikea.com/gb/en/iows/catalog/availability/" + itemCode + "/"
+        "https://www.ikea.com/"
+        + countryCode
+        + "/"
+        + languageCode
+        + "/iows/catalog/availability/"
+        + itemCode
+        + "/"
     ).content
 
     itemDict = xmltodict.parse(itemAPIEndpoint)["ir:ikea-rest"]["availability"][

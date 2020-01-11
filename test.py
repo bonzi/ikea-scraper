@@ -27,9 +27,13 @@ testItems = [
     "50455234",
 ]  # Random Items
 
+countryCode = "gb"
+
+languageCode = "en"
+
 # itemInfo("186", "00276862")
 
 for store in testStores:
     for item in testItems:
-        a = itemLocation(store, item)
+        a = itemLocation(countryCode, languageCode, store, item)
         pprint(a)
