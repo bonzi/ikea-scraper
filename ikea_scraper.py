@@ -6,6 +6,7 @@ import dateutil.parser
 
 
 def itemInfo(countryCode, languageCode, storeCode, itemCode):
+    d = dict()
     """
     Example Output, used for testing inputted config variables, e.g. storeCode, item, etc
     """
@@ -17,31 +18,43 @@ def itemInfo(countryCode, languageCode, storeCode, itemCode):
         + "/iows/catalog/availability/"
         + itemCode
         + "/"
-    ).content
+    )
 
-    itemDict = xmltodict.parse(itemAPIEndpoint)["ir:ikea-rest"]["availability"][
-        "localStore"
-    ]
+    if itemAPIEndpoint.headers["Content-Type"] != "text/xml;charset=UTF-8":
+        print(
+            "Error: Status " + str(itemAPIEndpoint.status_code) + ", Invalid Item Code"
+        )
+        d["status"] = "404"
+        d["message"] = "Invalid Item Code"
+        return d
 
-    for stores in itemDict:  # Loop through all stores in the item's dict
-        if (
-            stores["@buCode"] == storeCode
-        ):  # Check if selected store is one selected by end user
-            pprint(stores)
-            print(
-                "Avalable "
-                + itemCode
-                + " at "
-                + storeCode
-                + " as of "
-                + dateutil.parser.parse(stores["stock"]["validDate"]).strftime(
-                    "%d/%m/%Y"
-                )
-                + " : "
-                + str(stores["stock"]["availableStock"])
-            )  # Example output
-        else:
-            pass  # Skip to next dict as it is not what user requires
+    else:
+
+        itemAPIEndpointContent = itemAPIEndpoint.content
+
+        itemDict = xmltodict.parse(itemAPIEndpointContent)["ir:ikea-rest"][
+            "availability"
+        ]["localStore"]
+
+        for stores in itemDict:  # Loop through all stores in the item's dict
+            if (
+                stores["@buCode"] == storeCode
+            ):  # Check if selected store is one selected by end user
+                pprint(stores)
+                print(
+                    "Avalable "
+                    + itemCode
+                    + " at "
+                    + storeCode
+                    + " as of "
+                    + dateutil.parser.parse(stores["stock"]["validDate"]).strftime(
+                        "%d/%m/%Y"
+                    )
+                    + " : "
+                    + str(stores["stock"]["availableStock"])
+                )  # Example output
+            else:
+                pass  # Skip to next dict as it is not what user requires
 
 
 def itemLocation(countryCode, languageCode, storeCode, itemCode):
@@ -68,68 +81,80 @@ def itemLocation(countryCode, languageCode, storeCode, itemCode):
         + "/iows/catalog/availability/"
         + itemCode
         + "/"
-    ).content
+    )
+    if itemAPIEndpoint.headers["Content-Type"] != "text/xml;charset=UTF-8":
+        print(
+            "Error: Status " + str(itemAPIEndpoint.status_code) + ", Invalid Item Code"
+        )
+        d["status"] = "404"
+        d["message"] = "Invalid Item Code"
+        return d
 
-    itemDict = xmltodict.parse(itemAPIEndpoint)["ir:ikea-rest"]["availability"][
-        "localStore"
-    ]
+    else:
+        itemAPIEndpointContent = itemAPIEndpoint.content
 
-    for stores in itemDict:  # Loop through all stores in the item's dict
-        if (
-            stores["@buCode"] == storeCode
-        ):  # Check if selected store is one selected by end user
-            # print(
-            #    str(stores["stock"]["findItList"]["findIt"])
-            # )  # Example output
-            if stores["stock"]["findItList"]["findIt"]["type"] == "CONTACT_STAFF":
-                print(stores["stock"]["findItList"]["findIt"]["type"])
+        itemDict = xmltodict.parse(itemAPIEndpointContent)["ir:ikea-rest"][
+            "availability"
+        ]["localStore"]
 
-                d["status"] = "success"
-                d["store"] = storeCode
-                d["item"] = itemCode
-                d["type"] = stores["stock"]["findItList"]["findIt"]["type"]
+        for stores in itemDict:  # Loop through all stores in the item's dict
+            if (
+                stores["@buCode"] == storeCode
+            ):  # Check if selected store is one selected by end user
+                # print(
+                #    str(stores["stock"]["findItList"]["findIt"])
+                # )  # Example output
+                if stores["stock"]["findItList"]["findIt"]["type"] == "CONTACT_STAFF":
+                    print(stores["stock"]["findItList"]["findIt"]["type"])
 
-                return d
+                    d["status"] = "success"
+                    d["store"] = storeCode
+                    d["item"] = itemCode
+                    d["type"] = stores["stock"]["findItList"]["findIt"]["type"]
 
-            elif stores["stock"]["findItList"]["findIt"]["type"] == "SPECIALITY_SHOP":
-                print(
-                    stores["stock"]["findItList"]["findIt"]["type"]
-                    + " "
-                    + stores["stock"]["findItList"]["findIt"]["specialityShop"],
-                )
+                    return d
 
-                d["status"] = "success"
-                d["store"] = storeCode
-                d["item"] = itemCode
-                d["type"] = stores["stock"]["findItList"]["findIt"]["type"]
-                d["humanReadable"] = stores["stock"]["findItList"]["findIt"][
-                    "specialityShop"
-                ]
+                elif (
+                    stores["stock"]["findItList"]["findIt"]["type"] == "SPECIALITY_SHOP"
+                ):
+                    print(
+                        stores["stock"]["findItList"]["findIt"]["type"]
+                        + " "
+                        + stores["stock"]["findItList"]["findIt"]["specialityShop"],
+                    )
 
-                return d
+                    d["status"] = "success"
+                    d["store"] = storeCode
+                    d["item"] = itemCode
+                    d["type"] = stores["stock"]["findItList"]["findIt"]["type"]
+                    d["humanReadable"] = stores["stock"]["findItList"]["findIt"][
+                        "specialityShop"
+                    ]
 
-            elif stores["stock"]["findItList"]["findIt"]["type"] == "BOX_SHELF":
-                print(
-                    stores["stock"]["findItList"]["findIt"]["type"]
-                    + " "
-                    + stores["stock"]["findItList"]["findIt"]["box"]
-                    + " "
-                    + stores["stock"]["findItList"]["findIt"]["shelf"]
-                )
+                    return d
 
-                d["status"] = "success"
-                d["store"] = storeCode
-                d["item"] = itemCode
-                d["type"] = stores["stock"]["findItList"]["findIt"]["type"]
-                d["box"] = stores["stock"]["findItList"]["findIt"]["box"]
-                d["shelf"] = stores["stock"]["findItList"]["findIt"]["shelf"]
+                elif stores["stock"]["findItList"]["findIt"]["type"] == "BOX_SHELF":
+                    print(
+                        stores["stock"]["findItList"]["findIt"]["type"]
+                        + " "
+                        + stores["stock"]["findItList"]["findIt"]["box"]
+                        + " "
+                        + stores["stock"]["findItList"]["findIt"]["shelf"]
+                    )
 
-                return d
+                    d["status"] = "success"
+                    d["store"] = storeCode
+                    d["item"] = itemCode
+                    d["type"] = stores["stock"]["findItList"]["findIt"]["type"]
+                    d["box"] = stores["stock"]["findItList"]["findIt"]["box"]
+                    d["shelf"] = stores["stock"]["findItList"]["findIt"]["shelf"]
+
+                    return d
+
+                else:
+
+                    d["status"] = "failure"
+                    return d
 
             else:
-
-                d["status"] = "failure"
-                return d
-
-        else:
-            pass  # Skip to next dict as it is not what user requires
+                pass  # Skip to next dict as it is not what user requires
