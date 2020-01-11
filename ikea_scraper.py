@@ -82,7 +82,10 @@ def itemLocation(storeNum, items):
                             (
                                 ["store", ikeaStore],
                                 ["item", item],
-                                stores["stock"]["findItList"]["findIt"]["type"],
+                                [
+                                    "type",
+                                    stores["stock"]["findItList"]["findIt"]["type"],
+                                ],
                             )
                         )
 
@@ -99,9 +102,15 @@ def itemLocation(storeNum, items):
                             (
                                 ["store", ikeaStore],
                                 ["item", item],
-                                stores["stock"]["findItList"]["findIt"]["type"],
-                                stores["stock"]["findItList"]["findIt"][
-                                    "specialityShop"
+                                [
+                                    "type",
+                                    stores["stock"]["findItList"]["findIt"]["type"],
+                                ],
+                                [
+                                    "humanReadable",
+                                    stores["stock"]["findItList"]["findIt"][
+                                        "specialityShop"
+                                    ],
                                 ],
                             )
                         )
@@ -117,9 +126,15 @@ def itemLocation(storeNum, items):
                             (
                                 ["store", ikeaStore],
                                 ["item", item],
-                                stores["stock"]["findItList"]["findIt"]["type"],
-                                stores["stock"]["findItList"]["findIt"]["box"],
-                                stores["stock"]["findItList"]["findIt"]["shelf"],
+                                [
+                                    "type",
+                                    stores["stock"]["findItList"]["findIt"]["type"],
+                                ],
+                                ["box", stores["stock"]["findItList"]["findIt"]["box"]],
+                                [
+                                    "shelf",
+                                    stores["stock"]["findItList"]["findIt"]["shelf"],
+                                ],
                             )
                         )
                     else:
