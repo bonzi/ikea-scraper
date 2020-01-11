@@ -5,44 +5,40 @@ import requests
 import dateutil.parser
 
 
-def itemInfo(storeNum, items):
+def itemInfo(storeCode, itemCode):
     """
-    Example Output, used for testing inputted config variables, e.g. storeNum, items, etc
+    Example Output, used for testing inputted config variables, e.g. storeCode, item, etc
     """
-    for item in items:
+    itemAPIEndpoint = requests.get(
+        "https://www.ikea.com/gb/en/iows/catalog/availability/" + itemCode + "/"
+    ).content
 
-        itemAPIEndpoint = requests.get(
-            "https://www.ikea.com/gb/en/iows/catalog/availability/" + item + "/"
-        ).content
+    itemDict = xmltodict.parse(itemAPIEndpoint)["ir:ikea-rest"]["availability"][
+        "localStore"
+    ]
 
-        itemDict = xmltodict.parse(itemAPIEndpoint)["ir:ikea-rest"]["availability"][
-            "localStore"
-        ]
-
-        for ikeaStore in storeNum:  # Loop through store ID's in the store arrays
-            for stores in itemDict:  # Loop through all stores in the item's dict
-                if (
-                    stores["@buCode"] == ikeaStore
-                ):  # Check if selected store is one selected by end user
-                    pprint(stores)
-                    print(
-                        "Avalable "
-                        + item
-                        + " at "
-                        + ikeaStore
-                        + " as of "
-                        + dateutil.parser.parse(stores["stock"]["validDate"]).strftime(
-                            "%d/%m/%Y"
-                        )
-                        + " : "
-                        + str(stores["stock"]["availableStock"])
-                    )  # Example output
-                else:
-                    pass  # Skip to next dict as it is not what user requires
+    for stores in itemDict:  # Loop through all stores in the item's dict
+        if (
+            stores["@buCode"] == storeCode
+        ):  # Check if selected store is one selected by end user
+            pprint(stores)
+            print(
+                "Avalable "
+                + itemCode
+                + " at "
+                + storeCode
+                + " as of "
+                + dateutil.parser.parse(stores["stock"]["validDate"]).strftime(
+                    "%d/%m/%Y"
+                )
+                + " : "
+                + str(stores["stock"]["availableStock"])
+            )  # Example output
+        else:
+            pass  # Skip to next dict as it is not what user requires
 
 
-def itemLocation(storeNum, items):
-    returnable = []
+def itemLocation(storeCode, itemCode):
     """
     Output Item Location
     
@@ -55,91 +51,69 @@ def itemLocation(storeNum, items):
     SPECIALITY_SHOP - specialityShop
     
     """
-    for item in items:
 
-        itemAPIEndpoint = requests.get(
-            "https://www.ikea.com/gb/en/iows/catalog/availability/" + item + "/"
-        ).content
+    itemAPIEndpoint = requests.get(
+        "https://www.ikea.com/gb/en/iows/catalog/availability/" + itemCode + "/"
+    ).content
 
-        itemDict = xmltodict.parse(itemAPIEndpoint)["ir:ikea-rest"]["availability"][
-            "localStore"
-        ]
+    itemDict = xmltodict.parse(itemAPIEndpoint)["ir:ikea-rest"]["availability"][
+        "localStore"
+    ]
 
-        for ikeaStore in storeNum:  # Loop through store ID's in the store arrays
-            for stores in itemDict:  # Loop through all stores in the item's dict
-                if (
-                    stores["@buCode"] == ikeaStore
-                ):  # Check if selected store is one selected by end user
-                    # print(
-                    #    str(stores["stock"]["findItList"]["findIt"])
-                    # )  # Example output
-                    if (
-                        stores["stock"]["findItList"]["findIt"]["type"]
-                        == "CONTACT_STAFF"
-                    ):
-                        print(stores["stock"]["findItList"]["findIt"]["type"])
-                        returnable.append(
-                            (
-                                ["store", ikeaStore],
-                                ["item", item],
-                                [
-                                    "type",
-                                    stores["stock"]["findItList"]["findIt"]["type"],
-                                ],
-                            )
-                        )
+    for stores in itemDict:  # Loop through all stores in the item's dict
+        if (
+            stores["@buCode"] == storeCode
+        ):  # Check if selected store is one selected by end user
+            # print(
+            #    str(stores["stock"]["findItList"]["findIt"])
+            # )  # Example output
+            if stores["stock"]["findItList"]["findIt"]["type"] == "CONTACT_STAFF":
+                print(stores["stock"]["findItList"]["findIt"]["type"])
 
-                    elif (
-                        stores["stock"]["findItList"]["findIt"]["type"]
-                        == "SPECIALITY_SHOP"
-                    ):
-                        print(
-                            stores["stock"]["findItList"]["findIt"]["type"]
-                            + " "
-                            + stores["stock"]["findItList"]["findIt"]["specialityShop"],
-                        )
-                        returnable.append(
-                            (
-                                ["store", ikeaStore],
-                                ["item", item],
-                                [
-                                    "type",
-                                    stores["stock"]["findItList"]["findIt"]["type"],
-                                ],
-                                [
-                                    "humanReadable",
-                                    stores["stock"]["findItList"]["findIt"][
-                                        "specialityShop"
-                                    ],
-                                ],
-                            )
-                        )
-                    elif stores["stock"]["findItList"]["findIt"]["type"] == "BOX_SHELF":
-                        print(
-                            stores["stock"]["findItList"]["findIt"]["type"]
-                            + " "
-                            + stores["stock"]["findItList"]["findIt"]["box"]
-                            + " "
-                            + stores["stock"]["findItList"]["findIt"]["shelf"]
-                        )
-                        returnable.append(
-                            (
-                                ["store", ikeaStore],
-                                ["item", item],
-                                [
-                                    "type",
-                                    stores["stock"]["findItList"]["findIt"]["type"],
-                                ],
-                                ["box", stores["stock"]["findItList"]["findIt"]["box"]],
-                                [
-                                    "shelf",
-                                    stores["stock"]["findItList"]["findIt"]["shelf"],
-                                ],
-                            )
-                        )
-                    else:
-                        return TypeError
+                d = dict()
+                d["store"] = storeCode
+                d["item"] = itemCode
+                d["type"] = stores["stock"]["findItList"]["findIt"]["type"]
 
-                else:
-                    pass  # Skip to next dict as it is not what user requires
-    return returnable
+                return d
+
+            elif stores["stock"]["findItList"]["findIt"]["type"] == "SPECIALITY_SHOP":
+                print(
+                    stores["stock"]["findItList"]["findIt"]["type"]
+                    + " "
+                    + stores["stock"]["findItList"]["findIt"]["specialityShop"],
+                )
+
+                d = dict()
+                d["store"] = storeCode
+                d["item"] = itemCode
+                d["type"] = stores["stock"]["findItList"]["findIt"]["type"]
+                d["humanReadable"] = stores["stock"]["findItList"]["findIt"][
+                    "specialityShop"
+                ]
+
+                return d
+
+            elif stores["stock"]["findItList"]["findIt"]["type"] == "BOX_SHELF":
+                print(
+                    stores["stock"]["findItList"]["findIt"]["type"]
+                    + " "
+                    + stores["stock"]["findItList"]["findIt"]["box"]
+                    + " "
+                    + stores["stock"]["findItList"]["findIt"]["shelf"]
+                )
+
+                d = dict()
+                d["store"] = storeCode
+                d["item"] = itemCode
+                d["type"] = stores["stock"]["findItList"]["findIt"]["type"]
+                d["box"] = stores["stock"]["findItList"]["findIt"]["box"]
+                d["shelf"] = stores["stock"]["findItList"]["findIt"]["shelf"]
+
+                return d
+
+            else:
+                return TypeError
+
+        else:
+            pass  # Skip to next dict as it is not what user requires

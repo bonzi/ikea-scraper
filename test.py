@@ -2,8 +2,9 @@ from ikea_scraper import itemLocation, itemInfo
 from pprint import pprint
 
 testStores = [
-    "186"
-]  # IKEA Leeds, See http://curlybrackets.co/blog/2016/04/05/scraping-ikea-api-php/ for list of most UK store IDs
+    "186",
+    "150",
+]  # IKEA Leeds, IKEA Cardiff, See http://curlybrackets.co/blog/2016/04/05/scraping-ikea-api-php/ for list of most UK store IDs
 testItems = [
     "00276862",
     "40248513",
@@ -26,7 +27,9 @@ testItems = [
     "50455234",
 ]  # Random Items
 
-# itemInfo(testStores, testItems)
-h = itemLocation(testStores, testItems)
+# itemInfo("186", "00276862")
 
-pprint(h)
+for store in testStores:
+    for item in testItems:
+        a = itemLocation(store, item)
+        pprint(a)
