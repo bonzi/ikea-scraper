@@ -4,7 +4,6 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -17,3 +16,4 @@ jobs:
           architecture: x64 # optional, default is x64
       - name: Black Code Formatter
         uses: lgeiger/black-action@v1.0.1
+        args: ". --check"
