@@ -22,5 +22,6 @@ jobs:
         shell: bash
       - name: Black Code Formatter
         uses: lgeiger/black-action@v1.0.1
+        working-directory: /home/runner/work/ikea-scraper/ikea-scraper
         with:
-          args: ". --check"
+          args: ". --check
