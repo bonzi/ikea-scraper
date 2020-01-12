@@ -1,5 +1,7 @@
 # IKEA Scraper
 
+[![CircleCI](https://circleci.com/gh/LordBonzi/ikea-scraper.svg?style=svg)](https://circleci.com/gh/LordBonzi/ikea-scraper)
+
 ## Easily scrape the stock level's of your favourite IKEA Products, all from the comfort of your python shell
 
 ### Table of Contents
