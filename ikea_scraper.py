@@ -4,6 +4,9 @@ import json
 import requests
 import dateutil.parser
 
+with open("stores.json", "r") as storesJSONFile:
+    storesJSON = json.load(storesJSONFile)
+
 
 def itemInfo(countryCode: str, languageCode: str, storeCode: str, itemCode: str):
     d = dict()
@@ -59,7 +62,7 @@ def itemInfo(countryCode: str, languageCode: str, storeCode: str, itemCode: str)
                     "Avalable "
                     + itemCode
                     + " at "
-                    + storeCode
+                    + storesJSON[countryCode][storeCode]
                     + " as of "
                     + dateutil.parser.parse(stores["stock"]["validDate"]).strftime(
                         "%d/%m/%Y"
@@ -138,14 +141,12 @@ def itemLocation(countryCode: str, languageCode: str, storeCode: str, itemCode: 
             if (
                 stores["@buCode"] == storeCode
             ):  # Check if selected store is one selected by end user
-                # print(
-                #    str(stores["stock"]["findItList"]["findIt"])
-                # )  # Example output
                 if stores["stock"]["findItList"]["findIt"]["type"] == "CONTACT_STAFF":
                     print(stores["stock"]["findItList"]["findIt"]["type"])
 
                     d["status"] = "success"
                     d["store"] = storeCode
+                    d["storeName"] = storesJSON[countryCode][storeCode]
                     d["item"] = itemCode
                     d["type"] = stores["stock"]["findItList"]["findIt"]["type"]
 
@@ -162,6 +163,7 @@ def itemLocation(countryCode: str, languageCode: str, storeCode: str, itemCode: 
 
                     d["status"] = "success"
                     d["store"] = storeCode
+                    d["storeName"] = storesJSON[countryCode][storeCode]
                     d["item"] = itemCode
                     d["type"] = stores["stock"]["findItList"]["findIt"]["type"]
                     d["humanReadable"] = stores["stock"]["findItList"]["findIt"][
@@ -181,6 +183,7 @@ def itemLocation(countryCode: str, languageCode: str, storeCode: str, itemCode: 
 
                     d["status"] = "success"
                     d["store"] = storeCode
+                    d["storeName"] = storesJSON[countryCode][storeCode]
                     d["item"] = itemCode
                     d["type"] = stores["stock"]["findItList"]["findIt"]["type"]
                     d["box"] = stores["stock"]["findItList"]["findIt"]["box"]
