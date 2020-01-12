@@ -158,7 +158,7 @@ def itemLocation(countryCode: str, languageCode: str, storeCode: str, itemCode: 
                     print(
                         stores["stock"]["findItList"]["findIt"]["type"]
                         + " "
-                        + stores["stock"]["findItList"]["findIt"]["specialityShop"],
+                        + stores["stock"]["findItList"]["findIt"]["specialityShop"]
                     )
 
                     d["status"] = "success"
