@@ -1,4 +1,4 @@
-from ikea_scraper import itemLocation, itemInfo
+from ikea_scraper import itemLocation, itemInfo, itemStock
 from pprint import pprint
 
 testStores = [
@@ -36,5 +36,5 @@ languageCode = "en"
 
 for store in testStores:
     for item in testItems:
-        a = itemLocation(countryCode, languageCode, store, item)
+        a = itemStock(countryCode, languageCode, store, item)
         pprint(a)

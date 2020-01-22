@@ -12,3 +12,4 @@
 .[Vv]env
 [Pp]ip-selfcheck.json
 __pycache__
+**.egg-info
