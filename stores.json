@@ -143,6 +143,16 @@
         "346": "IKEA Уфа",
         "335": "IKEA Химки",
         "609": "IKEA Ходынское поле"
+    },
+    "ch": {
+        "078": "IKEA Aubonne VD",
+        "291": "IKEA Dietlikon ZH",
+        "101": "IKEA Grancia TI",
+        "290": "IKEA Lyssach BE",
+        "292": "IKEA Pratteln BL",
+        "275": "IKEA Rothenburg LU",
+        "079": "IKEA Spreitenbach AG",
+        "917": "IKEA St. Gallen SG",
+        "918": "IKEA Vernier GE"
     }
-
 }
