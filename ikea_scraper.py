@@ -1,4 +1,3 @@
-import xmltodict
 from pprint import pprint
 import json
 import requests
@@ -69,10 +68,6 @@ def itemLocation(countryCode: str, languageCode: str, storeCode: str, itemCode: 
 
     else:
         itemAPIEndpointContent = itemAPIEndpoint.json()["StockAvailability"]
-
-        # itemDict = xmltodict.parse(itemAPIEndpointContent)["ir:ikea-rest"][
-        #    "availability"
-        # ]["localStore"]
 
         if (
             itemAPIEndpointContent["RetailItemAvailability"]["SalesMethodCode"]["$"]
@@ -173,10 +168,6 @@ def itemStock(countryCode: str, languageCode: str, storeCode: str, itemCode: str
 
     else:
         itemAPIEndpointContent = itemAPIEndpoint.json()["StockAvailability"]
-
-        # itemDict = xmltodict.parse(itemAPIEndpointContent)["ir:ikea-rest"][
-        #    "availability"
-        # ]["localStore"]
 
         d["status"] = "success"
         d["store"] = storeCode
