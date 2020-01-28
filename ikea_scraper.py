@@ -83,7 +83,9 @@ def itemLocation(countryCode: str, languageCode: str, storeCode: str, itemCode: 
             ):
                 d["status"] = "failure"
                 d["code"] = "404"
-                d["message"] = "Invalid Item Code, this item may be an IKEA Food item, and as such has no real values on the API"
+                d[
+                    "message"
+                ] = "Invalid Item Code, this item may be an IKEA Food item, and as such has no real values on the API"
                 d["item"] = itemCode
 
                 return d
@@ -109,20 +111,27 @@ def itemLocation(countryCode: str, languageCode: str, storeCode: str, itemCode: 
             d["storeName"] = storesJSON[countryCode][storeCode]
             d["item"] = itemCode
             #            d["type"] = stores["stock"]["findItList"]["findIt"]["type"]
-            d["aisle"] = str(itemAPIEndpointContent["RetailItemAvailability"][
-                "RecommendedSalesLocation"
-            ]["$"])[:2]
-            d["shelf"] = str(itemAPIEndpointContent["RetailItemAvailability"][
-                "RecommendedSalesLocation"
-            ]["$"])[2:4]
-            d["subShelf"] = str(itemAPIEndpointContent["RetailItemAvailability"][
-                "RecommendedSalesLocation"
-            ]["$"])[4:6]
+            d["aisle"] = str(
+                itemAPIEndpointContent["RetailItemAvailability"][
+                    "RecommendedSalesLocation"
+                ]["$"]
+            )[:2]
+            d["shelf"] = str(
+                itemAPIEndpointContent["RetailItemAvailability"][
+                    "RecommendedSalesLocation"
+                ]["$"]
+            )[2:4]
+            d["subShelf"] = str(
+                itemAPIEndpointContent["RetailItemAvailability"][
+                    "RecommendedSalesLocation"
+                ]["$"]
+            )[4:6]
             return d
 
         elif (
             itemAPIEndpointContent["RetailItemAvailability"]["SalesMethodCode"]["$"]
-            == "2" or "3"
+            == "2"
+            or "3"
         ):  # Contact Staff
             d["status"] = "success"
             d["store"] = storeCode
@@ -131,6 +140,7 @@ def itemLocation(countryCode: str, languageCode: str, storeCode: str, itemCode: 
             d["type"] = "Contact Staff"
 
             return d
+
 
 def itemStock(countryCode: str, languageCode: str, storeCode: str, itemCode: str):
     """
