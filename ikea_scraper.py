@@ -73,16 +73,32 @@ def itemLocation(countryCode: str, languageCode: str, storeCode: str, itemCode: 
             itemAPIEndpointContent["RetailItemAvailability"]["SalesMethodCode"]["$"]
             == "0"
         ):  # Speciality Shop, e.g. Children's IKEA. Known to break with IKEA Food, which lacks a stock number, and sales location, but has the 0 code
-            d["status"] = "success"
-            d["store"] = storeCode
-            d["storeName"] = storesJSON[countryCode][storeCode]
-            d["item"] = itemCode
-            # d["type"] = stores["stock"]["findItList"]["findIt"]["type"] # Type no longer works on new API
-            d["humanReadable"] = itemAPIEndpointContent["RetailItemAvailability"][
-                "RecommendedSalesLocation"
-            ]["$"]
+            if (
+                len(
+                    itemAPIEndpointContent["RetailItemAvailability"][
+                        "RecommendedSalesLocation"
+                    ].keys()
+                )
+                == 0
+            ):
+                d["status"] = "failure"
+                d["code"] = "404"
+                d["message"] = "Invalid Item Code, this item may be an IKEA Food item, and as such has no real values on the API"
+                d["item"] = itemCode
 
-            return d
+                return d
+
+            else:
+                d["status"] = "success"
+                d["store"] = storeCode
+                d["storeName"] = storesJSON[countryCode][storeCode]
+                d["item"] = itemCode
+                # d["type"] = stores["stock"]["findItList"]["findIt"]["type"] # Type no longer works on new API
+                d["humanReadable"] = itemAPIEndpointContent["RetailItemAvailability"][
+                    "RecommendedSalesLocation"
+                ]["$"]
+
+                return d
 
         elif (
             itemAPIEndpointContent["RetailItemAvailability"]["SalesMethodCode"]["$"]
@@ -93,18 +109,20 @@ def itemLocation(countryCode: str, languageCode: str, storeCode: str, itemCode: 
             d["storeName"] = storesJSON[countryCode][storeCode]
             d["item"] = itemCode
             #            d["type"] = stores["stock"]["findItList"]["findIt"]["type"]
-            d["aisle"] = itemAPIEndpointContent["RetailItemAvailability"][
+            d["aisle"] = str(itemAPIEndpointContent["RetailItemAvailability"][
                 "RecommendedSalesLocation"
-            ]["$"][:2]
-            d["shelf"] = itemAPIEndpointContent["RetailItemAvailability"][
+            ]["$"])[:2]
+            d["shelf"] = str(itemAPIEndpointContent["RetailItemAvailability"][
                 "RecommendedSalesLocation"
-            ]["$"][2:4]
-
+            ]["$"])[2:4]
+            d["subShelf"] = str(itemAPIEndpointContent["RetailItemAvailability"][
+                "RecommendedSalesLocation"
+            ]["$"])[4:6]
             return d
 
         elif (
             itemAPIEndpointContent["RetailItemAvailability"]["SalesMethodCode"]["$"]
-            == "2"
+            == "2" or "3"
         ):  # Contact Staff
             d["status"] = "success"
             d["store"] = storeCode
@@ -113,7 +131,6 @@ def itemLocation(countryCode: str, languageCode: str, storeCode: str, itemCode: 
             d["type"] = "Contact Staff"
 
             return d
-
 
 def itemStock(countryCode: str, languageCode: str, storeCode: str, itemCode: str):
     """

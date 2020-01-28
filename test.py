@@ -1,5 +1,6 @@
 from ikea_scraper import itemLocation, itemStock
 from pprint import pprint
+import requests
 
 testStores = [
     "261",
@@ -36,5 +37,23 @@ languageCode = "en"
 
 for store in testStores:
     for item in testItems:
+        # itemAPIEndpoint = requests.get(
+        #     "https://iows.ikea.com/retail/iows/"
+        #     + countryCode
+        #     + "/"
+        #     + languageCode
+        #     + "/stores/"
+        #     + store
+        #     + "/availability/ART/"
+        #     + item,
+        #     headers={
+        #         "Accept": "application/vnd.ikea.iows+json;version=1.0",
+        #         "Contract": "37249",
+        #         "Consumer": "MAMMUT",
+        #     },
+        # )
+        # itemAPIEndpointContent = itemAPIEndpoint.json()
+        # pprint(itemAPIEndpointContent)
+
         a = itemLocation(countryCode, languageCode, store, item)
         pprint(a)

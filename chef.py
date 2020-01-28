@@ -1,10 +1,11 @@
 import requests
 from pprint import pprint
+from ikea_scraper import itemLocation
 
 countryCode = "gb"
 languageCode = "en"
-storeCode = "267"
-itemCode = "00346407"
+storeCode = "261"
+itemCode = "40248513"
 
 
 itemAPIEndpoint = requests.get(
@@ -24,3 +25,5 @@ itemAPIEndpoint = requests.get(
 )
 itemAPIEndpointContent = itemAPIEndpoint.json()
 pprint(itemAPIEndpointContent)
+
+pprint(itemLocation(countryCode, languageCode, storeCode, itemCode))
