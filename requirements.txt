@@ -24,7 +24,7 @@ pathspec==0.7.0
 pluggy==0.13.1
 pprint==0.1
 prometheus-client==0.7.1
-py==1.8.1
+py==1.10.0
 pycodestyle==2.5.0
 pyflakes==2.1.1
 Pygments==2.5.2
