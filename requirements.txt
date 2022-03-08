@@ -9,7 +9,7 @@ coverage==5.0.2
 entrypoints==0.3
 flake8==3.7.9
 Flask==1.1.1
-httpie==1.0.3
+httpie==3.1.0
 idna==2.8
 importlib-metadata==1.4.0
 isort==4.3.21
